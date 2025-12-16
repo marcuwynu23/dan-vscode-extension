@@ -87,9 +87,35 @@ npm run compile
 
 ### Testing
 
+#### Manual Testing
+
 1. Open this folder in VS Code
 2. Press `F5` to launch a new Extension Development Host window
 3. Open a `.dan` file to test syntax highlighting
+
+#### Automated Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+This will:
+- Download VS Code (if needed)
+- Compile the extension
+- Run all test cases
+- Verify extension activation, language registration, and syntax highlighting
+
+#### Test Coverage
+
+The test suite includes:
+- Extension activation and registration
+- Language ID recognition
+- Syntax highlighting for comments, strings, numbers, booleans
+- Table and array syntax
+- Nested block structures
+- Example file parsing
 
 ## License
 
