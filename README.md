@@ -98,14 +98,17 @@ npm run compile
 Run the test suite:
 
 ```bash
+npm run compile
 npm test
 ```
 
 This will:
+- Compile TypeScript files
 - Download VS Code (if needed)
-- Compile the extension
 - Run all test cases
 - Verify extension activation, language registration, and syntax highlighting
+
+**Note**: On Linux, tests require a display server. In CI/CD, Xvfb is automatically set up. For local Linux testing, you may need to run tests with a display server or use WSL with X11 forwarding.
 
 #### Test Coverage
 

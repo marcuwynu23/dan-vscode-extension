@@ -9,9 +9,10 @@ on:
 
 jobs:
   test:
-    name: Test on ${{ matrix.os }}
+    name: Test on ${{ matrix.os }} (VS Code ${{ matrix.vscode-version }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         vscode-version: ['1.74.0', '1.80.0']
@@ -31,11 +32,39 @@ jobs:
 
       - name: Compile TypeScript
         run: npm run compile
+        continue-on-error: false
 
-      - name: Run tests
-        run: npm test
+      - name: Verify compiled files
+        run: |
+          echo "Checking compiled files..."
+          ls -la out/ || dir out
+          ls -la out/test/ || dir out\test
+          ls -la out/test/suite/ || dir out\test\suite
+
+      - name: Install Xvfb and dependencies (Linux only)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libnss3 libatk-bridge2.0-0 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
+
+      - name: Run tests with Xvfb (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          sleep 3
+          node ./out/test/runTest.js || (pkill -f Xvfb; exit 1)
         env:
           VSCODE_TEST_VERSION: ${{ matrix.vscode-version }}
+          DISPLAY: :99
+        continue-on-error: false
+
+      - name: Run tests (Windows/macOS)
+        if: runner.os != 'Linux'
+        run: node ./out/test/runTest.js
+        env:
+          VSCODE_TEST_VERSION: ${{ matrix.vscode-version }}
+        continue-on-error: false
 
       - name: Upload test results
         if: always()
@@ -45,6 +74,7 @@ jobs:
           path: |
             test-results/
             coverage/
+            .vscode-test/
           retention-days: 7
           if-no-files-found: ignore
 
