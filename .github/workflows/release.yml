@@ -26,7 +26,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -34,9 +34,6 @@ jobs:
 
       - name: Compile TypeScript
         run: npm run compile
-
-      - name: Install vsce
-        run: npm install -g @vscode/vsce
 
       - name: Get version
         id: version
@@ -49,11 +46,16 @@ jobs:
             VERSION=$(node -p "require('./package.json').version")
             VERSION="v$VERSION"
           fi
+          # Remove 'v' prefix if present for filename
+          VERSION_NO_V="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "vsix_file=dan-language-${VERSION#v}.vsix" >> $GITHUB_OUTPUT
+          echo "version_no_v=$VERSION_NO_V" >> $GITHUB_OUTPUT
+          echo "vsix_file=dan-language-$VERSION_NO_V.vsix" >> $GITHUB_OUTPUT
 
       - name: Package extension
-        run: vsce package --out dan-language-${{ steps.version.outputs.vsix_file }}
+        run: |
+          # Use npx with latest vsce to avoid Node.js 18 compatibility issues
+          npx --yes @vscode/vsce@latest package --out ${{ steps.version.outputs.vsix_file }}
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
