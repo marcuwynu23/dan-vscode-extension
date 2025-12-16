@@ -1,0 +1,194 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "DAN",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#blocks"
+    },
+    {
+      "include": "#tables"
+    },
+    {
+      "include": "#key-value"
+    },
+    {
+      "include": "#values"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.dan",
+          "match": "#.*$"
+        },
+        {
+          "name": "comment.line.double-slash.dan",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "blocks": {
+      "patterns": [
+        {
+          "name": "meta.block.dan",
+          "begin": "^(\\w+)\\s*\\{",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.section.dan"
+            },
+            "2": {
+              "name": "punctuation.definition.block.begin.dan"
+            }
+          },
+          "end": "^\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.block.end.dan"
+            }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
+        }
+      ]
+    },
+    "tables": {
+      "patterns": [
+        {
+          "name": "meta.table.dan",
+          "begin": "^(\\w+):\\s*(table)\\s*\\(",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.table.dan"
+            },
+            "2": {
+              "name": "keyword.other.table.dan"
+            }
+          },
+          "end": "^\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.table.end.dan"
+            }
+          },
+          "patterns": [
+            {
+              "name": "meta.table.columns.dan",
+              "begin": "\\(",
+              "end": "\\)\\s*\\[",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.definition.table.columns.begin.dan"
+                }
+              },
+              "endCaptures": {
+                "0": {
+                  "name": "punctuation.definition.table.begin.dan"
+                }
+              },
+              "patterns": [
+                {
+                  "name": "variable.other.table.column.dan",
+                  "match": "\\w+"
+                },
+                {
+                  "name": "punctuation.separator.comma.dan",
+                  "match": ","
+                }
+              ]
+            },
+            {
+              "name": "meta.table.row.dan",
+              "match": "^\\s+[^\\]]+",
+              "patterns": [
+                {
+                  "include": "#values"
+                },
+                {
+                  "name": "punctuation.separator.comma.dan",
+                  "match": ","
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "key-value": {
+      "patterns": [
+        {
+          "name": "meta.key-value.dan",
+          "match": "^(\\w+):\\s*(.+)$",
+          "captures": {
+            "1": {
+              "name": "entity.name.tag.dan"
+            },
+            "2": {
+              "name": "punctuation.separator.key-value.dan"
+            },
+            "3": {
+              "name": "meta.value.dan",
+              "patterns": [
+                {
+                  "include": "#values"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "values": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.dan",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.dan",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "constant.language.boolean.true.dan",
+          "match": "\\btrue\\b"
+        },
+        {
+          "name": "constant.language.boolean.false.dan",
+          "match": "\\bfalse\\b"
+        },
+        {
+          "name": "constant.numeric.dan",
+          "match": "\\b\\d+\\.?\\d*\\b"
+        },
+        {
+          "name": "meta.array.dan",
+          "begin": "\\[",
+          "end": "\\]",
+          "patterns": [
+            {
+              "include": "#values"
+            },
+            {
+              "name": "punctuation.separator.comma.dan",
+              "match": ","
+            }
+          ]
+        },
+        {
+          "name": "variable.other.dan",
+          "match": "\\b\\w+\\b"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.dan"
+}

@@ -1,0 +1,61 @@
+{
+  "name": "dan-language",
+  "displayName": "DAN (Data Advanced Notation)",
+  "description": "Syntax highlighting and language support for DAN (Data Advanced Notation) files",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "dan",
+    "data",
+    "notation",
+    "configuration",
+    "syntax"
+  ],
+  "activationEvents": [
+    "onLanguage:dan"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "dan",
+        "aliases": [
+          "DAN",
+          "Data Advanced Notation"
+        ],
+        "extensions": [
+          ".dan"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "dan",
+        "scopeName": "source.dan",
+        "path": "./syntaxes/dan.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.74.0",
+    "typescript": "^4.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/dan-vscode-extension"
+  },
+  "license": "MIT"
+}
+
