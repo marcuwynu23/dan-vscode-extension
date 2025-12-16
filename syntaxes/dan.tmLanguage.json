@@ -6,10 +6,10 @@
       "include": "#comments"
     },
     {
-      "include": "#blocks"
+      "include": "#tables"
     },
     {
-      "include": "#tables"
+      "include": "#blocks"
     },
     {
       "include": "#key-value"
@@ -38,7 +38,7 @@
           "begin": "^(\\w+)\\s*\\{",
           "beginCaptures": {
             "1": {
-              "name": "entity.name.section.dan"
+              "name": "entity.name.section.dan support.class.dan"
             },
             "2": {
               "name": "punctuation.definition.block.begin.dan"
@@ -65,10 +65,10 @@
           "begin": "^(\\w+):\\s*(table)\\s*\\(",
           "beginCaptures": {
             "1": {
-              "name": "entity.name.table.dan"
+              "name": "entity.name.table.dan variable.other.readwrite.dan"
             },
             "2": {
-              "name": "keyword.other.table.dan"
+              "name": "keyword.other.table.dan storage.type.dan"
             }
           },
           "end": "^\\]",
@@ -94,7 +94,7 @@
               },
               "patterns": [
                 {
-                  "name": "variable.other.table.column.dan",
+                  "name": "variable.other.table.column.dan entity.name.variable.dan",
                   "match": "\\w+"
                 },
                 {
@@ -108,7 +108,7 @@
               "match": "^\\s+[^\\]]+",
               "patterns": [
                 {
-                  "include": "#values"
+                  "include": "#table-values"
                 },
                 {
                   "name": "punctuation.separator.comma.dan",
@@ -120,6 +120,29 @@
         }
       ]
     },
+    "table-values": {
+      "patterns": [
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#booleans"
+        },
+        {
+          "include": "#http-methods"
+        },
+        {
+          "include": "#paths"
+        },
+        {
+          "name": "variable.other.dan",
+          "match": "\\b\\w+\\b"
+        }
+      ]
+    },
     "key-value": {
       "patterns": [
         {
@@ -127,7 +150,7 @@
           "match": "^(\\w+):\\s*(.+)$",
           "captures": {
             "1": {
-              "name": "entity.name.tag.dan"
+              "name": "entity.name.tag.dan variable.other.readwrite.dan"
             },
             "2": {
               "name": "punctuation.separator.key-value.dan"
@@ -147,6 +170,32 @@
     "values": {
       "patterns": [
         {
+          "include": "#strings"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#booleans"
+        },
+        {
+          "include": "#arrays"
+        },
+        {
+          "include": "#paths"
+        },
+        {
+          "include": "#common-identifiers"
+        },
+        {
+          "name": "variable.other.dan",
+          "match": "\\b\\w+\\b"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
           "name": "string.quoted.double.dan",
           "begin": "\"",
           "end": "\"",
@@ -154,25 +203,59 @@
             {
               "name": "constant.character.escape.dan",
               "match": "\\\\."
+            },
+            {
+              "name": "string.quoted.double.dan meta.template.expression",
+              "match": "\\$\\{[^}]+\\}"
             }
           ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.dan constant.numeric.dan",
+          "match": "\\b\\d+\\b"
         },
         {
-          "name": "constant.language.boolean.true.dan",
+          "name": "constant.numeric.float.dan constant.numeric.dan",
+          "match": "\\b\\d+\\.\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.hex.dan constant.numeric.dan",
+          "match": "\\b0[xX][0-9a-fA-F]+\\b"
+        }
+      ]
+    },
+    "booleans": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.true.dan constant.language.boolean.dan",
           "match": "\\btrue\\b"
         },
         {
-          "name": "constant.language.boolean.false.dan",
+          "name": "constant.language.boolean.false.dan constant.language.boolean.dan",
           "match": "\\bfalse\\b"
-        },
-        {
-          "name": "constant.numeric.dan",
-          "match": "\\b\\d+\\.?\\d*\\b"
-        },
+        }
+      ]
+    },
+    "arrays": {
+      "patterns": [
         {
           "name": "meta.array.dan",
           "begin": "\\[",
           "end": "\\]",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.array.begin.dan"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.array.end.dan"
+            }
+          },
           "patterns": [
             {
               "include": "#values"
@@ -182,10 +265,50 @@
               "match": ","
             }
           ]
+        }
+      ]
+    },
+    "http-methods": {
+      "patterns": [
+        {
+          "name": "constant.language.http-method.dan support.constant.dan",
+          "match": "\\b(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)\\b"
+        }
+      ]
+    },
+    "paths": {
+      "patterns": [
+        {
+          "name": "string.unquoted.path.dan string.other.path.dan",
+          "match": "(?<![\"\\w])(?:/[\\w\\.\\-/:]+|\\\\[\\w\\.\\-:\\\\]+)(?![\"\\w])"
+        }
+      ]
+    },
+    "common-identifiers": {
+      "patterns": [
+        {
+          "name": "constant.language.null.dan constant.language.dan",
+          "match": "\\bnull\\b"
         },
         {
-          "name": "variable.other.dan",
-          "match": "\\b\\w+\\b"
+          "name": "constant.language.undefined.dan constant.language.dan",
+          "match": "\\bundefined\\b"
+        },
+        {
+          "name": "keyword.other.environment.dan support.constant.dan",
+          "match": "\\b(production|development|staging|test|local|dev|prod|staging|qa)\\b"
+        },
+        {
+          "name": "keyword.other.database-type.dan support.type.dan",
+          "match": "\\b(postgresql|mysql|mongodb|redis|sqlite|mariadb|oracle|mssql)\\b"
+        },
+        {
+          "name": "keyword.other.log-level.dan support.constant.dan",
+          "match": "\\b(debug|info|warn|warning|error|fatal|trace|verbose)\\b"
+        },
+        {
+          "name": "keyword.other.http-status.dan constant.numeric.dan",
+          "match": "\\b(200|201|204|400|401|403|404|500|502|503)\\b"
         }
       ]
     }
