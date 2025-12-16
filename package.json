@@ -2,7 +2,7 @@
   "name": "dan-language",
   "displayName": "DAN (Data Advanced Notation)",
   "description": "Syntax highlighting and language support for DAN (Data Advanced Notation) files",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -63,4 +63,3 @@
   },
   "license": "MIT"
 }
-
